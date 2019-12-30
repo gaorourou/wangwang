@@ -32,5 +32,5 @@ export default {
 }
 </script>
 <style scoped>
-#content .cinema_menu{ width: 100%; height: 45px; border-bottom:1px solid #e6e6e6; display: flex; justify-content:space-around; align-items:center; background:white; z-index:10;margin-top: 50px;}
+#content .cinema_menu{ width: 100%; height: 45px; border-bottom:1px solid #e6e6e6; display: flex; justify-content:space-around; align-items:center; background:white;}
 </style>

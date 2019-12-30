@@ -1,6 +1,8 @@
 <template>
   <div class="movie_body">
     <meta name="referrer" content="never">
+    <Loading v-if="isLoading"></Loading>
+    <Scroller v-else :handToScroll='handToScroll' :handTouchEnd='handTouchEnd'>
     <ul>
       <!-- <li>
         <div class="pic_show"><img src="/images/movie_1.jpg"></div>
@@ -26,6 +28,7 @@
           预售
         </div>
       </li> -->
+      <li class="pullDown">{{pullDownMsg}}</li>
       <li v-for="item in movieList" :key="item.id">
         <div class="pic_show"><img :src="item.images.small"></div>
         <div class="info_list">
@@ -39,6 +42,7 @@
         </div>
       </li>
     </ul>
+    </Scroller>
   </div>
 </template>
 <script>
@@ -46,8 +50,11 @@ export default {
   name:"ComingSoon",
   data(){
     return {
-     movieList : [],
-     name : ""
+    movieList : [],
+    name : "",
+    pullDownMsg : "",
+    isLoading : true,
+    prevCityNm : ""
     }
   },
   // mounted(){
@@ -64,22 +71,49 @@ export default {
   //     }
   //   })
   // }
-  mounted(){
-    this.axios.get('https://douban.uieee.com/v2/movie/coming_soon')
+  activated(){
+    var cityNm = this.$store.state.city.nm;
+    if(this.prevCityNm===cityNm){return;}
+    this.isLoading = true; 
+    this.axios.get('https://douban.uieee.com/v2/movie/coming_soon'+cityNm)
     .then((res)=>{
       console.log(res);
       var statusText = res.statusText;
-      console.log(statusText);
+      // console.log(statusText);
       if(statusText === "OK"){
         this.movieList = res.data.subjects;
-        console.log(this.movieList);
+        this.isLoading = false;
+        this.prevCityNm = cityNm
+        // console.log(this.movieList);
       }
     })
+  },
+  methods:{
+    handToScroll(pos){
+      if(pos.y > 30){
+        this.pullDownMsg = '正在更新中...'
+      }
+    },
+    handTouchEnd(pos){
+      this.axios.get('https://douban.uieee.com/v2/movie/coming_soon'+cityNm)
+      .then((res)=>{
+        
+        var statusText = res.statusText;
+        if(statusText === "OK"){
+          this.pullDownMsg = '更新成功...'
+          setTimeout(()=>{
+            this.movieList = res.data.subjects;
+            this.pullDownMsg = ""
+          },1000)
+        }
+      });
+    }
   }
 }
 </script>
 <style scoped>
-.movie_body ul{ margin:0 12px; overflow: hidden;margin-top: 95px;}
+#content .movie_body{ flex:1; overflow:auto;}
+.movie_body ul{ margin:0 12px; overflow: hidden;}
 .movie_body ul li{ margin-top:12px; display: flex; align-items:center; border-bottom: 1px #e6e6e6 solid; padding-bottom: 10px;}
 .movie_body .pic_show{ width:64px; height: 90px;}
 .movie_body .pic_show img{ width:100%;}
@@ -90,4 +124,5 @@ export default {
 .movie_body .info_list img{ width:50px; position: absolute; right:10px; top: 5px;}
 .movie_body .btn_mall , .movie_body .btn_pre{ width:47px; height:27px; line-height: 28px; text-align: center; background-color: #f03d37; color: #fff; border-radius: 4px; font-size: 12px; cursor: pointer;}
 .movie_body .btn_pre{ background-color: #3c9fe6;}
+.movie_body .pullDown{ margin:0; padding:0; border:none;}
 </style>

@@ -1,22 +1,25 @@
 <template>
   <div class="cinema_body">
-    <ul>
-      <li v-for="item in CiList" :key="item.id">
-        <div>
-          <span>{{item.nm}}</span>
-          <span class="q"><span class="price">{{item.sellPrice}}</span> 元起</span>
-        </div>
-        <div class="address">
-          <span>{{item.addr}}</span>
-          <span>{{item.distance}}</span>
-        </div>
-        <div class="card">
-          <div v-for="(num,key) in item.tag" v-if="num===1" :key="key" :class="key | classCard">
-            {{key | formatCard}}
+    <Loading v-if="isLoading"></Loading>
+    <Scroller v-else>
+      <ul>
+        <li v-for="item in CiList" :key="item.id">
+          <div>
+            <span>{{item.nm}}</span>
+            <span class="q"><span class="price">{{item.sellPrice}}</span> 元起</span>
           </div>
-        </div>
-      </li>
-    </ul>
+          <div class="address">
+            <span>{{item.addr}}</span>
+            <span>{{item.distance}}</span>
+          </div>
+          <div class="card">
+            <div v-for="(num,key) in item.tag" v-if="num===1" :key="key" :class="key | classCard">
+              {{key | formatCard}}
+            </div>
+          </div>
+        </li>
+      </ul>
+    </Scroller>
   </div>
 </template>
 <script>
@@ -25,11 +28,21 @@ export default {
   name : 'CiList',
   data(){
     return{
-      CiList : []
+      CiList : [],
+      isLoading : true,
+      prevCityNm:""
     }
   },
-  mounted() {
-    this.CiList = CiList.cinemas;
+  activated() {
+    var cityNm = this.$store.state.city.nm;
+    if(this.prevCityNm===cityNm){return;}
+    this.isLoading = true;
+    setTimeout(()=>{
+      this.CiList = CiList.cinemas;
+      this.isLoading = false;
+      this.prevCityNm = cityNm
+    },200)
+    
     console.log(this.CiList);
   },
   filters : {

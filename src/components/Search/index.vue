@@ -37,7 +37,8 @@ export default {
   data(){
     return {
       message:'',
-      movieList:[]
+      movieList:[],
+      cityNm:""
     }
   },
   methods : {
@@ -49,8 +50,9 @@ export default {
   },
   watch : {
     message(newVal){
+      var cityNm = this.$store.state.city.nm;
       this.cancelRequest();
-      this.axios.get('/api/searchList?cityId=10&kw='+newVal,{
+      this.axios.get('/api/searchList?cityId='+cityNm+'&kw='+newVal,{
         cancelToken: new this.axios.CancelToken((c) => {
           console.log(1);
           this.source = c;
