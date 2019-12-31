@@ -17,32 +17,34 @@
             购票
           </div>
         </li> -->
-        <!-- <li class="pullDown">{{ pullDownMsg }}</li>
+        <!-- api -->
+        <li class="pullDown">{{ pullDownMsg }}</li>
         <li v-for="item in movieList" :key="item.id">
           <div class="pic_show" @tap="handToDetail()"><img :src="item.img | setWH('128.180')"></div>
           <div class="info_list">
             <h2>{{item.nm}} <img v-if="item.version" src="@/assets/maxs.png" alt=""> </h2>
-            <p>观众评价 <span class="grade">{{item.sc}}</span></p>
+            <p>观众评价 <span class="grade">{{item.sc}}</span></p><br>
             <p>主演: {{item.star}}</p>
             <p>{{item.showInfo}}</p>
           </div>
           <div class="btn_mall">
             购票
           </div>
-        </li> -->
-        <li class="pullDown">{{ pullDownMsg }}</li>
+        </li>
+        <!-- douban -->
+        <!-- <li class="pullDown">{{ pullDownMsg }}</li>
         <li v-for="item in movieList" :key="item.id">
           <div class="pic_show" @tap="handToDetail()"><img :src="item.images.small"></div>
           <div class="info_list">
             <h2>{{item.title}} <img v-if="item.version" src="@/assets/maxs.png" alt=""> </h2>
             <p>观众评价 <span class="grade">{{item.rating.average}}</span></p><br>
             主演: <p v-for="(cast,index) in item.casts" :key="index">{{cast.name+","}}</p>
-            <!-- <p>{{item.showInfo}}</p> -->
+            <p>{{item.showInfo}}</p>
           </div>
           <div class="btn_mall">
             购票
           </div>
-        </li>
+        </li> -->
       </ul>
     </Scroller>
   </div>
@@ -56,7 +58,8 @@ export default {
       movieList : [],
       pullDownMsg : "",
       isLoading : true,
-      prevCityNm : ""
+      prevCityNm : "",
+      prevCityId : -1
     }
   },
   // mounted(){
@@ -98,22 +101,39 @@ export default {
   //     }
   //   })
   // },
+  //-------douban----------
+  // activated(){
+  //   var cityNm = this.$store.state.city.nm;
+  //   if(this.prevCityNm===cityNm){return;}
+  //   this.isLoading = true;
+  //   console.log(1123);
+  //   this.axios.get('https://douban.uieee.com/v2/movie/in_theaters?city='+cityNm)
+  //   .then((res)=>{
+  //     // console.log(cityNm)
+  //     // console.log(res);
+  //     var statusText = res.statusText;
+  //     // console.log(statusText);
+  //     if(statusText === "OK"){
+  //       this.movieList = res.data.subjects;
+  //       this.isLoading = false;
+  //       this.prevCityNm = cityNm;
+  //       // console.log(this.movieList);
+  //     }
+  //   })
+  // },
+  ///api----------
   activated(){
-    var cityNm = this.$store.state.city.nm;
-    if(this.prevCityNm===cityNm){return;}
+    var cityId = this.$store.state.city.id;
+    if(this.prevCityId===cityId){return;}
     this.isLoading = true;
     console.log(1123);
-    this.axios.get('https://douban.uieee.com/v2/movie/in_theaters?city='+cityNm)
-    
+    this.axios.get('/api/movieOnInfoList?cityId='+cityId)
     .then((res)=>{
-      // console.log(cityNm)
-      // console.log(res);
-      var statusText = res.statusText;
-      // console.log(statusText);
-      if(statusText === "OK"){
-        this.movieList = res.data.subjects;
+      var msg = res.data.msg;
+        if(msg === "ok"){
+        this.movieList = res.data.data.movieList;
         this.isLoading = false;
-        this.prevCityNm = cityNm;
+        this.prevCityId = cityId;
         // console.log(this.movieList);
       }
     })
@@ -127,19 +147,38 @@ export default {
         this.pullDownMsg = '正在更新中...'
       }
     },
+    //api
     handTouchEnd(pos){
-      this.axios.get('https://douban.uieee.com/v2/movie/in_theaters?city='+cityNm)
-      .then((res)=>{
-        var statusText = res.statusText;
-        if(statusText === "OK"){
-          this.pullDownMsg = '更新成功...'
-          setTimeout(()=>{
-            this.movieList = res.data.subjects;
-            this.pullDownMsg = ""
-          },1000)
-        }
-      });
+      if(pos.y > 30){
+        this.axios.get('/api/movieOnInfoList?cityId='+this.cityId)
+        .then((res)=>{
+          var msg = res.data.msg;
+          if(msg === "ok"){
+            this.pullDownMsg = '更新成功...'
+            setTimeout(()=>{
+              this.movieList = res.data.data.movieList;
+              this.pullDownMsg = ""
+            },1000)
+          }
+        })
+      };
     }
+    //douban
+    // handTouchEnd(pos){
+    //   if(pos.y > 30){
+    //     this.axios.get('https://douban.uieee.com/v2/movie/in_theaters?city='+this.cityNm)
+    //     .then((res)=>{
+    //       var statusText = res.statusText;
+    //       if(statusText === "OK"){
+    //         this.pullDownMsg = '更新成功...'
+    //         setTimeout(()=>{
+    //           this.movieList = res.data.subjects;
+    //           this.pullDownMsg = ""
+    //         },1000)
+    //       }
+    //     })
+    //   };
+    // }
   }
 }
 </script>

@@ -54,7 +54,8 @@ export default {
     name : "",
     pullDownMsg : "",
     isLoading : true,
-    prevCityNm : ""
+    prevCityNm : "",
+    prevCityId : -1
     }
   },
   // mounted(){
@@ -73,9 +74,10 @@ export default {
   // }
   activated(){
     var cityNm = this.$store.state.city.nm;
+
     if(this.prevCityNm===cityNm){return;}
     this.isLoading = true; 
-    this.axios.get('https://douban.uieee.com/v2/movie/coming_soon'+cityNm)
+    this.axios.get('https://douban.uieee.com/v2/movie/coming_soon?city='+cityNm)
     .then((res)=>{
       console.log(res);
       var statusText = res.statusText;
@@ -90,14 +92,15 @@ export default {
   },
   methods:{
     handToScroll(pos){
+      console.log(this.cityNm);
       if(pos.y > 30){
         this.pullDownMsg = '正在更新中...'
       }
     },
     handTouchEnd(pos){
-      this.axios.get('https://douban.uieee.com/v2/movie/coming_soon'+cityNm)
+      console.log(this.cityNm)
+      this.axios.get('https://douban.uieee.com/v2/movie/coming_soon?city='+this.cityNm)
       .then((res)=>{
-        
         var statusText = res.statusText;
         if(statusText === "OK"){
           this.pullDownMsg = '更新成功...'
