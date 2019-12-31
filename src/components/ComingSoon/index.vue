@@ -30,9 +30,9 @@
       </li> -->
       <li class="pullDown">{{pullDownMsg}}</li>
       <li v-for="item in movieList" :key="item.id">
-        <div class="pic_show"><img :src="item.images.small"></div>
+        <div class="pic_show" @tap="handToDetail(item.id)"><img :src="item.images.small"></div>
         <div class="info_list">
-          <h2>{{item.title}}</h2>
+          <h2 @tap="handToDetail(item.id)">{{item.title}}</h2>
           <p><span class="person">{{item.collect_count}}</span> 人想看</p><br>
           <div style="display:inline">主演:</div><p v-for="(cast,index) in item.casts" :key="index">{{cast.name+","}}</p><br>
           <p>{{item.mainland_pubdate}} 上映</p>
@@ -91,6 +91,10 @@ export default {
     })
   },
   methods:{
+    handToDetail(movieId){
+      // console.log(movieId);
+      this.$router.push('/movie/detail/2/' + movieId);
+    },
     handToScroll(pos){
       console.log(this.cityNm);
       if(pos.y > 30){
