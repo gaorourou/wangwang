@@ -126,7 +126,7 @@ export default {
   //   var cityId = this.$store.state.city.id;
   //   if(this.prevCityId===cityId){return;}
   //   this.isLoading = true;
-  //   console.log(1123);
+    // console.log(1123);
   //   this.axios.get('/api/movieOnInfoList?cityId='+cityId)
   //   .then((res)=>{
   //     var msg = res.data.msg;
@@ -140,7 +140,7 @@ export default {
   // },
   methods:{
     handToDetail(movieId){
-      console.log(movieId);
+      // console.log(movieId);
       this.$router.push('/movie/detail/1/' + movieId);
     },
     handToScroll(pos){
