@@ -18,11 +18,11 @@
           </div>
         </li> -->
         <!-- api -->
-        <li class="pullDown">{{ pullDownMsg }}</li>
+        <!-- <li class="pullDown">{{ pullDownMsg }}</li>
         <li v-for="item in movieList" :key="item.id">
-          <div class="pic_show" @tap="handToDetail()"><img :src="item.img | setWH('128.180')"></div>
+          <div class="pic_show" @tap="handToDetail(item.id)"><img :src="item.img | setWH('128.180')"></div>
           <div class="info_list">
-            <h2>{{item.nm}} <img v-if="item.version" src="@/assets/maxs.png" alt=""> </h2>
+            <h2 @tap="handToDetail(item.id)">{{item.nm}} <img v-if="item.version" src="@/assets/maxs.png" alt=""> </h2>
             <p>观众评价 <span class="grade">{{item.sc}}</span></p><br>
             <p>主演: {{item.star}}</p>
             <p>{{item.showInfo}}</p>
@@ -30,13 +30,13 @@
           <div class="btn_mall">
             购票
           </div>
-        </li>
+        </li> -->
         <!-- douban -->
-        <!-- <li class="pullDown">{{ pullDownMsg }}</li>
+        <li class="pullDown">{{ pullDownMsg }}</li>
         <li v-for="item in movieList" :key="item.id">
-          <div class="pic_show" @tap="handToDetail()"><img :src="item.images.small"></div>
+          <div class="pic_show" @tap="handToDetail(item.id)"><img :src="item.images.small"></div>
           <div class="info_list">
-            <h2>{{item.title}} <img v-if="item.version" src="@/assets/maxs.png" alt=""> </h2>
+            <h2 @tap="handToDetail(item.id)">{{item.title}} <img v-if="item.version" src="@/assets/maxs.png" alt=""> </h2>
             <p>观众评价 <span class="grade">{{item.rating.average}}</span></p><br>
             主演: <p v-for="(cast,index) in item.casts" :key="index">{{cast.name+","}}</p>
             <p>{{item.showInfo}}</p>
@@ -44,7 +44,7 @@
           <div class="btn_mall">
             购票
           </div>
-        </li> -->
+        </li>
       </ul>
     </Scroller>
   </div>
@@ -70,77 +70,78 @@ export default {
   //     if(msg === "ok"){
   //       this.movieList = res.data.data.movieList;
   //       this.isLoading = false;
-  //       // this.$nextTick(()=>{
-  //       //   var scroll = new Bscroll(this.$refs.movie_body,{
-  //       //     tap : true,
-  //       //     probeType: 1
-  //       //   });
-  //       //   scroll.on('scroll',(pos)=>{
-  //       //     // console.log('scroll')
-  //       //     if(pos.y > 30){
-  //       //       this.pullDownMsg = '正在更新中...'
-  //       //     }
-  //       //   });
-  //       //   scroll.on('touchEnd',(pos)=>{
-  //       //     console.log('touchend')
-  //       //     if(pos.y > 30){
-  //       //       this.axios.get('/api/movieOnInfoList?cityId=1')
-  //       //       .then((res)=>{
-  //       //         var msg = res.data.msg;
-  //       //         if(msg === "ok"){
-  //       //           this.pullDownMsg = '更新成功...'
-  //       //           setTimeout(()=>{
-  //       //             this.movieList = res.data.data.movieList;
-  //       //             this.pullDownMsg = ""
-  //       //           },1000)
-  //       //         }
-  //       //       });
-  //       //     }
-  //       //   })
-  //       // });
+  //       this.$nextTick(()=>{
+  //         var scroll = new Bscroll(this.$refs.movie_body,{
+  //           tap : true,
+  //           probeType: 1
+  //         });
+  //         scroll.on('scroll',(pos)=>{
+  //           // console.log('scroll')
+  //           if(pos.y > 30){
+  //             this.pullDownMsg = '正在更新中...'
+  //           }
+  //         });
+  //         scroll.on('touchEnd',(pos)=>{
+  //           console.log('touchend')
+  //           if(pos.y > 30){
+  //             this.axios.get('/api/movieOnInfoList?cityId=1')
+  //             .then((res)=>{
+  //               var msg = res.data.msg;
+  //               if(msg === "ok"){
+  //                 this.pullDownMsg = '更新成功...'
+  //                 setTimeout(()=>{
+  //                   this.movieList = res.data.data.movieList;
+  //                   this.pullDownMsg = ""
+  //                 },1000)
+  //               }
+  //             });
+  //           }
+  //         })
+  //       });
   //     }
   //   })
   // },
   //-------douban----------
-  // activated(){
-  //   var cityNm = this.$store.state.city.nm;
-  //   if(this.prevCityNm===cityNm){return;}
-  //   this.isLoading = true;
-  //   console.log(1123);
-  //   this.axios.get('https://douban.uieee.com/v2/movie/in_theaters?city='+cityNm)
-  //   .then((res)=>{
-  //     // console.log(cityNm)
-  //     // console.log(res);
-  //     var statusText = res.statusText;
-  //     // console.log(statusText);
-  //     if(statusText === "OK"){
-  //       this.movieList = res.data.subjects;
-  //       this.isLoading = false;
-  //       this.prevCityNm = cityNm;
-  //       // console.log(this.movieList);
-  //     }
-  //   })
-  // },
-  ///api----------
   activated(){
-    var cityId = this.$store.state.city.id;
-    if(this.prevCityId===cityId){return;}
+    var cityNm = this.$store.state.city.nm;
+    if(this.prevCityNm===cityNm){return;}
     this.isLoading = true;
-    console.log(1123);
-    this.axios.get('/api/movieOnInfoList?cityId='+cityId)
+    // console.log(1123);
+    this.axios.get('https://douban.uieee.com/v2/movie/in_theaters?city='+cityNm)
     .then((res)=>{
-      var msg = res.data.msg;
-        if(msg === "ok"){
-        this.movieList = res.data.data.movieList;
+      // console.log(cityNm)
+      // console.log(res);
+      var statusText = res.statusText;
+      // console.log(statusText);
+      if(statusText === "OK"){
+        this.movieList = res.data.subjects;
         this.isLoading = false;
-        this.prevCityId = cityId;
+        this.prevCityNm = cityNm;
         // console.log(this.movieList);
       }
     })
   },
+  ///api----------
+  // activated(){
+  //   var cityId = this.$store.state.city.id;
+  //   if(this.prevCityId===cityId){return;}
+  //   this.isLoading = true;
+  //   console.log(1123);
+  //   this.axios.get('/api/movieOnInfoList?cityId='+cityId)
+  //   .then((res)=>{
+  //     var msg = res.data.msg;
+  //       if(msg === "ok"){
+  //       this.movieList = res.data.data.movieList;
+  //       this.isLoading = false;
+  //       this.prevCityId = cityId;
+  //       // console.log(this.movieList);
+  //     }
+  //   })
+  // },
   methods:{
-    handToDetail(){
-      console.log('handToDetail');
+    handToDetail(movieId){
+      console.log(movieId);
+      this.$router.push('/movie/detail/1/' + movieId);
     },
     handToScroll(pos){
       if(pos.y > 30){
@@ -148,37 +149,37 @@ export default {
       }
     },
     //api
-    handTouchEnd(pos){
-      if(pos.y > 30){
-        this.axios.get('/api/movieOnInfoList?cityId='+this.cityId)
-        .then((res)=>{
-          var msg = res.data.msg;
-          if(msg === "ok"){
-            this.pullDownMsg = '更新成功...'
-            setTimeout(()=>{
-              this.movieList = res.data.data.movieList;
-              this.pullDownMsg = ""
-            },1000)
-          }
-        })
-      };
-    }
-    //douban
     // handTouchEnd(pos){
     //   if(pos.y > 30){
-    //     this.axios.get('https://douban.uieee.com/v2/movie/in_theaters?city='+this.cityNm)
+    //     this.axios.get('/api/movieOnInfoList?cityId='+this.cityId)
     //     .then((res)=>{
-    //       var statusText = res.statusText;
-    //       if(statusText === "OK"){
+    //       var msg = res.data.msg;
+    //       if(msg === "ok"){
     //         this.pullDownMsg = '更新成功...'
     //         setTimeout(()=>{
-    //           this.movieList = res.data.subjects;
+    //           this.movieList = res.data.data.movieList;
     //           this.pullDownMsg = ""
     //         },1000)
     //       }
     //     })
     //   };
     // }
+    //douban
+    handTouchEnd(pos){
+      if(pos.y > 30){
+        this.axios.get('https://douban.uieee.com/v2/movie/in_theaters?city='+this.cityNm)
+        .then((res)=>{
+          var statusText = res.statusText;
+          if(statusText === "OK"){
+            this.pullDownMsg = '更新成功...'
+            setTimeout(()=>{
+              this.movieList = res.data.subjects;
+              this.pullDownMsg = ""
+            },1000)
+          }
+        })
+      };
+    }
   }
 }
 </script>
