@@ -34,7 +34,9 @@
         <div class="info_list">
           <h2 @tap="handToDetail(item.id)">{{item.title}}</h2>
           <p><span class="person">{{item.collect_count}}</span> 人想看</p><br>
-          <div style="display:inline">主演:</div><p v-for="(cast,index) in item.casts" :key="index">{{cast.name+","}}</p><br>
+          <div class="casts">
+            <h5 style="display: inline-block;">主演:</h5><p v-for="(cast,index) in item.casts" :key="index">{{cast.name+','}}</p>
+          </div>
           <p>{{item.mainland_pubdate}} 上映</p>
         </div>
         <div class="btn_pre">
@@ -132,4 +134,5 @@ export default {
 .movie_body .btn_mall , .movie_body .btn_pre{ width:47px; height:27px; line-height: 28px; text-align: center; background-color: #f03d37; color: #fff; border-radius: 4px; font-size: 12px; cursor: pointer;}
 .movie_body .btn_pre{ background-color: #3c9fe6;}
 .movie_body .pullDown{ margin:0; padding:0; border:none;}
+.casts{height: 46px;width: 215px;overflow:hidden;text-overflow: ellipsis;}
 </style>
