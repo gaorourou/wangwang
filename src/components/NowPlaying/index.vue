@@ -122,7 +122,7 @@ export default {
       .get("https://douban.uieee.com/v2/movie/in_theaters?city=" + cityNm)
       .then(res => {
         // console.log(cityNm)
-        console.log(res);
+        // console.log(res);
         var statusText = res.statusText;
         // console.log(statusText);
         if (statusText === "OK") {

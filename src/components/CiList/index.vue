@@ -43,7 +43,7 @@ export default {
       this.prevCityNm = cityNm
     },200)
     
-    console.log(this.CiList);
+    // console.log(this.CiList);
   },
   filters : {
     formatCard(key){

@@ -81,7 +81,7 @@ export default {
     this.isLoading = true; 
     this.axios.get('https://douban.uieee.com/v2/movie/coming_soon?city='+cityNm)
     .then((res)=>{
-      console.log(res);
+      // console.log(res);
       var statusText = res.statusText;
       // console.log(statusText);
       if(statusText === "OK"){
@@ -98,13 +98,13 @@ export default {
       this.$router.push('/movie/detail/2/' + movieId);
     },
     handToScroll(pos){
-      console.log(this.cityNm);
+      // console.log(this.cityNm);
       if(pos.y > 30){
         this.pullDownMsg = '正在更新中...'
       }
     },
     handTouchEnd(pos){
-      console.log(this.cityNm)
+      // console.log(this.cityNm)
       this.axios.get('https://douban.uieee.com/v2/movie/coming_soon?city='+this.cityNm)
       .then((res)=>{
         var statusText = res.statusText;
